@@ -69,8 +69,11 @@ class LandingPage extends Component {
       })
     }
     saveMessage(name, text);
+
+    this.setState({ message: '' });
   }
 
+  // THINK BTN CHANGING COLOUR OF TEXT 
   onPress = () => {
     if (this.state.font === 'black') {
       this.setState({ font: 'grey' });
@@ -80,16 +83,42 @@ class LandingPage extends Component {
     }
   }
 
+  // DELETE LAST USER COMMENT 
+  onDelete = () => {
+    //  delete last message code he
+    let userName = this.state.name;
+    console.log(userName);
+    messageRef.orderByChild('name').equalTo(userName).limitToLast(1).once('child_added', function (snapshot) {
+      snapshot.ref.remove();
+    })
+    this.refresh()
+  }
+
+  refresh = () => {
+    const previousMessages = [];
+    messageRef.on('child_added', snapshot => {
+      previousMessages.push({
+        id: snapshot.key,
+        message: snapshot.val().text,
+        name: snapshot.val().name
+      })
+      this.setState({
+        list: previousMessages
+      })
+    })
+  }
+ 
+
   render() {
     return <div className='container'>
 
       {/* title */}
-      <div className='titleDiv'>
+      < div className='titleDiv' >
         <h1>React Message App</h1>
-      </div>
+      </div >
 
       {/* messages will be listed here */}
-      <div className='messagesDiv' id='messagesDivId'>
+      < div className='messagesDiv' id='messagesDivId' >
         <ul>
           {/* List array is mapped through*/}
           {this.state.list.map(item => {
@@ -99,28 +128,28 @@ class LandingPage extends Component {
                 key={item.id}
                 id={item.id}>
                 {item.name}: {item.message}
-                <button className='deleteMessage'>X</button>
               </li>
             )
           })}
         </ul>
-      </div>
+      </div >
 
       {/* message text area and send button here  */}
-      <div className='inputDiv' id='inputDivId'>
+      < div className='inputDiv' id='inputDivId' >
         <form onSubmit={this.submitHandler}>
           <input name="message"
             className='inputBox'
+            id='messageInputBox'
             placeholder="Send message..."
-            value={this.message}
+            value={this.state.message}
             onChange={this.changeHandler}
             required />
           <button className='submit' type="submit">Send Message</button>
         </form>
-      </div>
+      </div >
 
       {/* type nickname + button here  */}
-      <div className='nicknameDiv' id='nameDivId'>
+      < div className='nicknameDiv' id='nameDivId' >
         <form onSubmit={this.setName}>
           <input name="name"
             className='inputBox'
@@ -130,15 +159,15 @@ class LandingPage extends Component {
             required />
           <button className='submit' type="submit">Confirm Nickname</button>
         </form>
-      </div>
+      </div >
 
       {/*think, delete options*/}
-      <div id='options'>
+      < div id='options' >
         <button id='think' className='button think' onClick={this.onPress}>Think...</button>
-        <button id='delete' className='button delete'>Delete last message</button>
-      </div>
+        <button id='delete' className='button delete' onClick={this.onDelete}>Delete last message</button>
+      </div >
 
-    </div>
+    </div >
   }
 }
 
