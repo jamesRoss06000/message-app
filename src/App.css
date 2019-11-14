@@ -52,12 +52,27 @@ ul {
     background-color: rgb(204, 204, 204);
     color: black;
 }
+.leftGrey {
+  float: left;       
+  margin-right:10%;
+  border: rgb(199, 199, 199) 1px solid;
+  background-color: rgb(204, 204, 204);
+  color: grey;
+}
+
 .right {
     float:right;
     margin-left:10%;
     border: lightgreen 1px solid;
     background-color: lightgreen;
     color: black;
+}
+.rightGrey {
+  float:right;
+  margin-left:10%;
+  border: lightgreen 1px solid;
+  background-color: lightgreen;
+  color: grey;
 }
 
 /* message input and button  */

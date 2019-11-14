@@ -14,15 +14,16 @@ class LandingPage extends Component {
     this.state = {
       name: '',
       message: '',
-      list: []
+      list: [],
+      font: "black",
     }
   }
 
   // LOAD PREVIOUS MESSAGES ON PAGE LOAD 
-  componentDidMount(){
+  componentDidMount() {
     const previousMessages = this.state.list;
 
-    messageRef.on('child_added', snapshot =>{
+    messageRef.on('child_added', snapshot => {
       previousMessages.push({
         id: snapshot.key,
         message: snapshot.val().text,
@@ -66,6 +67,15 @@ class LandingPage extends Component {
     saveMessage(name, text);
   }
 
+ onPress = () => {
+  if (this.state.font === 'black'){
+    this.setState({ font: 'grey' });
+  }
+  else {
+    this.setState({ font: 'black' });
+  }
+}
+
   render() {
     return <div className='container'>
 
@@ -75,12 +85,13 @@ class LandingPage extends Component {
       </div>
 
       {/* messages will be listed here */}
-      <div className='messagesDiv'>
+      <div className='messagesDiv' id='messagesDivId'>
         <ul>
           {/* List array is mapped through*/}
           {this.state.list.map(item => {
             return (
               <li className={(item.name === this.state.name ? 'right' : 'left')}
+              style={{ color: this.state.font }}
                 key={item.id}
                 id={item.id}>
                 {item.name}: {item.message}
@@ -115,7 +126,7 @@ class LandingPage extends Component {
       </div>
 
       {/* nickname, think, delete options*/}
-      <button className='button think'>Think...</button>
+      <button className='button think' onClick={this.onPress}>Think...</button>
       <button className='button delete'>Delete last message</button>
     </div>
   }
