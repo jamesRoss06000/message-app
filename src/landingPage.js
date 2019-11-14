@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-require('dotenv').config();
+import { firebaseConfig } from './connection';
 
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
-  databaseURL: "https://message-app-2f7b3.firebaseio.com",
-  projectId: process.env.REACT_APP_FIREBASE_PROJEDT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID,
-  appId: "1:318418595733:web:100410dda5ec1bc75c909c",
-  measurementId: "G-KH72VESE32"
-};
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 let messageRef = firebase.database().ref('messages');
@@ -24,8 +14,28 @@ class LandingPage extends Component {
     this.state = {
       name: '',
       message: '',
+      list: []
     }
   }
+
+  // LOAD PREVIOUS MESSAGES ON PAGE LOAD 
+  componentWillMount(){
+    const previousMessages = this.state.list;
+
+    messageRef.on('child_added', snapshot =>{
+      previousMessages.push({
+        id: snapshot.key,
+        message: snapshot.val().text,
+        name: snapshot.val().name
+      })
+
+      this.setState({
+        list: previousMessages
+      })
+    })
+  }
+
+  // SEND DATA TO DB
 
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value })
@@ -36,15 +46,14 @@ class LandingPage extends Component {
     let name = this.state.name;
     let text = this.state.message;
 
-    function saveMessage(name, text, id) {
+    function saveMessage(name, text) {
       let newMessageRef = messageRef.push();
       newMessageRef.set({
         name,
         text,
-        id
       })
     }
-    saveMessage(name, text, id);
+    saveMessage(name, text);
   }
 
   render() {
@@ -59,14 +68,15 @@ class LandingPage extends Component {
       <div className='messagesDiv'>
         <ul>
           {/* List array is mapped through*/}
-          {/* {this.state.list.map(item => {
+          {this.state.list.map(item => {
             return (
               <li className={(item.name === 'You' ? 'right' : 'left')}
-                key={item.id}>
+                key={item.id}
+                id={item.id}>
                 {item.name}: {item.message}
               </li>
             )
-          })} */}
+          })}
         </ul>
       </div>
 
