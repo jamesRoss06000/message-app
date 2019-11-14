@@ -63,6 +63,7 @@ ul {
 /* message input and button  */
 .inputDiv {
   background-color: pink;
+  display: none;
 }
 
 /* option buttons */

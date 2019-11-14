@@ -19,7 +19,7 @@ class LandingPage extends Component {
   }
 
   // LOAD PREVIOUS MESSAGES ON PAGE LOAD 
-  componentWillMount(){
+  componentDidMount(){
     const previousMessages = this.state.list;
 
     messageRef.on('child_added', snapshot =>{
@@ -36,10 +36,20 @@ class LandingPage extends Component {
   }
 
   // SEND DATA TO DB
-
   changeHandler = e => {
+    e.preventDefault()
     this.setState({ [e.target.name]: e.target.value })
   }
+
+  setName = e => {
+    e.preventDefault()
+    this.setState({ [e.target.name]: e.target.value })
+    let textBox = document.getElementById('inputDivId');
+    textBox.style.display = "block";
+    let nameBox = document.getElementById('nameDivId');
+    nameBox.style.display = "none";
+  }
+
   submitHandler = e => {
     e.preventDefault()
 
@@ -70,7 +80,7 @@ class LandingPage extends Component {
           {/* List array is mapped through*/}
           {this.state.list.map(item => {
             return (
-              <li className={(item.name === 'You' ? 'right' : 'left')}
+              <li className={(item.name === this.state.name ? 'right' : 'left')}
                 key={item.id}
                 id={item.id}>
                 {item.name}: {item.message}
@@ -81,22 +91,32 @@ class LandingPage extends Component {
       </div>
 
       {/* message text area and send button here  */}
-      <div className='inputDiv'>
+      <div className='inputDiv' id='inputDivId'>
         <form onSubmit={this.submitHandler}>
           <input name="message"
             placeholder="Send message..."
             value={this.message}
             onChange={this.changeHandler}
-            id='formText'
             required />
           <button className='submit' type="submit">Send Message</button>
         </form>
       </div>
 
+      {/* type nickname + button here  */}
+      <div className='nicknameDiv' id='nameDivId'>
+        <form onSubmit={this.setName}>
+          <input name="name"
+            placeholder="Choose a unique nickname..."
+            value={this.name}
+            onChange={this.changeHandler}
+            required />
+          <button className='submit' type="submit">Confirm Nickname</button>
+        </form>
+      </div>
+
       {/* nickname, think, delete options*/}
-      <button className='button nickname'>Nickname</button>
       <button className='button think'>Think...</button>
-      <button className='button delete'>Delete</button>
+      <button className='button delete'>Delete last message</button>
     </div>
   }
 }
