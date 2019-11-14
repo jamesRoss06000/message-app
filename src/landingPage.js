@@ -46,7 +46,11 @@ class LandingPage extends Component {
     e.preventDefault()
     this.setState({ [e.target.name]: e.target.value })
     let textBox = document.getElementById('inputDivId');
-    textBox.style.display = "block";
+    textBox.style.display = "flex";
+    let messagesBox = document.getElementById('messagesDivId');
+    messagesBox.style.display = "flex";
+    let thinkDel = document.getElementById('options');
+    thinkDel.style.display = "flex";
     let nameBox = document.getElementById('nameDivId');
     nameBox.style.display = "none";
   }
@@ -67,14 +71,14 @@ class LandingPage extends Component {
     saveMessage(name, text);
   }
 
- onPress = () => {
-  if (this.state.font === 'black'){
-    this.setState({ font: 'grey' });
+  onPress = () => {
+    if (this.state.font === 'black') {
+      this.setState({ font: 'grey' });
+    }
+    else {
+      this.setState({ font: 'black' });
+    }
   }
-  else {
-    this.setState({ font: 'black' });
-  }
-}
 
   render() {
     return <div className='container'>
@@ -91,10 +95,11 @@ class LandingPage extends Component {
           {this.state.list.map(item => {
             return (
               <li className={(item.name === this.state.name ? 'right' : 'left')}
-              style={{ color: this.state.font }}
+                style={{ color: this.state.font }}
                 key={item.id}
                 id={item.id}>
                 {item.name}: {item.message}
+                <button className='deleteMessage'>X</button>
               </li>
             )
           })}
@@ -105,6 +110,7 @@ class LandingPage extends Component {
       <div className='inputDiv' id='inputDivId'>
         <form onSubmit={this.submitHandler}>
           <input name="message"
+            className='inputBox'
             placeholder="Send message..."
             value={this.message}
             onChange={this.changeHandler}
@@ -117,6 +123,7 @@ class LandingPage extends Component {
       <div className='nicknameDiv' id='nameDivId'>
         <form onSubmit={this.setName}>
           <input name="name"
+            className='inputBox'
             placeholder="Choose a unique nickname..."
             value={this.name}
             onChange={this.changeHandler}
@@ -125,9 +132,12 @@ class LandingPage extends Component {
         </form>
       </div>
 
-      {/* nickname, think, delete options*/}
-      <button className='button think' onClick={this.onPress}>Think...</button>
-      <button className='button delete'>Delete last message</button>
+      {/*think, delete options*/}
+      <div id='options'>
+        <button id='think' className='button think' onClick={this.onPress}>Think...</button>
+        <button id='delete' className='button delete'>Delete last message</button>
+      </div>
+
     </div>
   }
 }
