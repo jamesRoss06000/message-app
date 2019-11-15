@@ -5,6 +5,7 @@ import { firebaseConfig } from './connection';
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 let messageRef = firebase.database().ref('messages');
+let listRef = firebase.database().ref('users');
 
 class LandingPage extends Component {
 
@@ -15,6 +16,7 @@ class LandingPage extends Component {
       name: '',
       message: '',
       list: [],
+      names: [],
       font: "black",
     }
   }
@@ -36,12 +38,12 @@ class LandingPage extends Component {
     })
   }
 
-  // SEND DATA TO DB
+  // CHANGE STATE WITH INPUT DATA 
   changeHandler = e => {
     e.preventDefault()
     this.setState({ [e.target.name]: e.target.value })
   }
-
+  // WHEN NAME SET, SHOW DIVS, ALSO SEND NAME TO DB FOR USER INSTANCES
   setName = e => {
     e.preventDefault()
     this.setState({ [e.target.name]: e.target.value })
@@ -53,14 +55,40 @@ class LandingPage extends Component {
     thinkDel.style.display = "flex";
     let nameBox = document.getElementById('nameDivId');
     nameBox.style.display = "none";
+
+    // Add ourselves to presence list when online.
+    let name = this.state.name;
+    let names = this.state.names;
+    let connectedRef = firebase.database().ref('.info/connected');
+
+    let users = [];
+    connectedRef.on('value', function (snap) {
+      if (snap.val() === true) {
+        // Connected
+        const con = listRef.child(name);  //Here we define a Reference
+        // On disconnect, remove this name
+        con.onDisconnect().remove();
+        // Add this name to the list of users AFTER calling disconnect or no good
+        con.set(true);   //Here we write data (true) to the Database location corresponding to the Reference defined above 
+      }
+
+      // GET LIST OF USERS FROM DB
+      listRef.on("value", function (snapshot) {
+        users.push({
+          id: 1 + Math.random(),
+          name: snapshot.val()
+        })
+        console.log(users);
+      });
+    });
+    this.setState({ names: users })
+    console.log(users, names);
   }
 
   submitHandler = e => {
     e.preventDefault()
-
     let name = this.state.name;
     let text = this.state.message;
-
     function saveMessage(name, text) {
       let newMessageRef = messageRef.push();
       newMessageRef.set({
@@ -85,9 +113,8 @@ class LandingPage extends Component {
 
   // DELETE LAST USER COMMENT 
   onDelete = () => {
-    //  delete last message code he
     let userName = this.state.name;
-    console.log(userName);
+    // console.log(userName);
     messageRef.orderByChild('name').equalTo(userName).limitToLast(1).once('child_added', function (snapshot) {
       snapshot.ref.remove();
     })
@@ -107,7 +134,6 @@ class LandingPage extends Component {
       })
     })
   }
- 
 
   render() {
     return <div className='container'>
@@ -115,6 +141,14 @@ class LandingPage extends Component {
       {/* title */}
       < div className='titleDiv' >
         <h1>React Message App</h1>
+        <p className='usersLoggedIn'>Logged in: </p>
+        {this.state.names.map(item => {
+          return (
+            <p className='usersLoggedIn' key={item.id}>
+              {(item.name === this.state.name ? item.name : item.name)}
+            </p>
+          )
+        })}
       </div >
 
       {/* messages will be listed here */}
