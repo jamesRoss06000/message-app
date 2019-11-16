@@ -22,11 +22,11 @@ class LandingPage extends Component {
 
   }
 
-  // LOAD PREVIOUS MESSAGES ON PAGE LOAD 
+  // LOAD PREVIOUS NAME AND MESSAGES ON PAGE LOAD 
   componentDidMount() {
     const previousMessages = this.state.list;
 
-    messageRef.on('child_added', snapshot => {
+    messageRef.limitToLast(10).on('child_added', snapshot => {
       previousMessages.push({
         id: snapshot.key,
         message: snapshot.val().text,
@@ -61,6 +61,8 @@ class LandingPage extends Component {
     let name = this.state.name;
     let connectedRef = firebase.database().ref('.info/connected');
 
+    localStorage.setItem('name', name);
+
     connectedRef.on('value', (snapshot) => {
       if (snapshot.val() === true) {
         // CONNECTED
@@ -85,7 +87,7 @@ class LandingPage extends Component {
         this.setState({
           names: users[0].name
         })
-        console.log(this.state.names);
+        // console.log(this.state.names, users[0].name, Object.keys(users[0].name).length);
       }
     });
   }
@@ -147,12 +149,12 @@ class LandingPage extends Component {
       {/* title */}
       <div className='titleDiv'>
         <h1>React Message App</h1>
-        <p className='usersLoggedIn'>Logged in: </p>
+        {/* <p className='usersLoggedIn'>Logged in: </p> */}
         {
           Object.keys(this.state.names).map(item => {
             return (
               <p className='usersLoggedIn' key={item}>
-                {(item === this.state.name ? ' ' : item)}
+                {(item === this.state.name ? ' ' : item + ' is logged in')}
               </p>
             )
           })
