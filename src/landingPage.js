@@ -19,6 +19,7 @@ class LandingPage extends Component {
       names: [],
       font: "black",
     }
+
   }
 
   // LOAD PREVIOUS MESSAGES ON PAGE LOAD 
@@ -56,33 +57,37 @@ class LandingPage extends Component {
     let nameBox = document.getElementById('nameDivId');
     nameBox.style.display = "none";
 
-    // Add ourselves to presence list when online.
+    // Add user to presence list
     let name = this.state.name;
-    let names = this.state.names;
     let connectedRef = firebase.database().ref('.info/connected');
 
-    let users = [];
-    connectedRef.on('value', function (snap) {
-      if (snap.val() === true) {
+    connectedRef.on('value', (snapshot) => {
+      if (snapshot.val() === true) {
         // Connected
         const con = listRef.child(name);  //Here we define a Reference
         // On disconnect, remove this name
         con.onDisconnect().remove();
         // Add this name to the list of users AFTER calling disconnect or no good
-        con.set(true);   //Here we write data (true) to the Database location corresponding to the Reference defined above 
+        con.set(true);   //Write data (true) 
       }
 
-      // GET LIST OF USERS FROM DB
-      listRef.on("value", function (snapshot) {
-        users.push({
-          id: 1 + Math.random(),
-          name: snapshot.val()
-        })
-        console.log(users);
+      listRef.on("value", (snapshot) => {
+        let users = [];
+        snapshot.forEach((user) => {
+          users.push({
+            id: snapshot.key,
+            name: snapshot.val()
+          })
+        });
+        setList(users);
       });
+      const setList = (users) => {
+        this.setState({
+          names: users[0].name
+        })
+        console.log(this.state.names);
+      }
     });
-    this.setState({ names: users })
-    console.log(users, names);
   }
 
   submitHandler = e => {
@@ -136,20 +141,23 @@ class LandingPage extends Component {
   }
 
   render() {
+
     return <div className='container'>
 
       {/* title */}
-      < div className='titleDiv' >
+      <div className='titleDiv'>
         <h1>React Message App</h1>
         <p className='usersLoggedIn'>Logged in: </p>
-        {this.state.names.map(item => {
-          return (
-            <p className='usersLoggedIn' key={item.id}>
-              {(item.name === this.state.name ? item.name : item.name)}
-            </p>
-          )
-        })}
-      </div >
+        {
+          Object.keys(this.state.names).map(item => {
+            return (
+              <p className='usersLoggedIn' key={item}>
+                {(item === this.state.name ? ' ' : item)}
+              </p>
+            )
+          })
+        }
+      </div>
 
       {/* messages will be listed here */}
       < div className='messagesDiv' id='messagesDivId' >
