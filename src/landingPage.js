@@ -57,20 +57,20 @@ class LandingPage extends Component {
     let nameBox = document.getElementById('nameDivId');
     nameBox.style.display = "none";
 
-    // Add user to presence list
+    // ADD USER TO CONNECTED LIST 
     let name = this.state.name;
     let connectedRef = firebase.database().ref('.info/connected');
 
     connectedRef.on('value', (snapshot) => {
       if (snapshot.val() === true) {
-        // Connected
-        const con = listRef.child(name);  //Here we define a Reference
-        // On disconnect, remove this name
+        // CONNECTED
+        const con = listRef.child(name);  // DEFINE REFERENCE
+        // DISCONNECT, REMOVE NAME FROM DB
         con.onDisconnect().remove();
-        // Add this name to the list of users AFTER calling disconnect or no good
-        con.set(true);   //Write data (true) 
+        // ADD NAME TO DB AFTER CALLING DISCONNECT - IMPORTANT (if not it adds then delets straight away)
+        con.set(true);   // ADD VALUE TO NAME INDEX/KEY (true)
       }
-
+      // GET LIST FROM DB AND PUSH INTO OUR ARRAY IN THIS.STATE
       listRef.on("value", (snapshot) => {
         let users = [];
         snapshot.forEach((user) => {
@@ -90,6 +90,7 @@ class LandingPage extends Component {
     });
   }
 
+  // PUSH MESSAGE TO DB THEN RESET THIS.STATE
   submitHandler = e => {
     e.preventDefault()
     let name = this.state.name;
@@ -125,7 +126,7 @@ class LandingPage extends Component {
     })
     this.refresh()
   }
-
+  // REFRESH MESSAGE LIST AFTER DELETING LAST MESSAGE
   refresh = () => {
     const previousMessages = [];
     messageRef.on('child_added', snapshot => {
@@ -140,10 +141,9 @@ class LandingPage extends Component {
     })
   }
 
+  // RENDER THE HTML
   render() {
-
     return <div className='container'>
-
       {/* title */}
       <div className='titleDiv'>
         <h1>React Message App</h1>
