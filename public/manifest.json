@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
+  "short_name": "Message App",
   "name": "Create React App Sample",
+  "homepage": "https://jamesross06000.github.io/message-app/",
   "icons": [
     {
       "src": "favicon.ico",

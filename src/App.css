@@ -1,7 +1,11 @@
 body {
   border: none;
   margin: none;
-  background-color: rgb(48, 48, 48);
+  background: black;
+  background-image: url(./star-sky.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.90;
 }
 
 .App {
@@ -21,12 +25,6 @@ body {
   border-radius: 5px;
   padding: 1px;
 }
-
-/* .usersLoggedIn {
-  padding-bottom: 5px;
-} */
-
-/* messages list */
 
 .messagesDiv {
   display: none;
@@ -70,7 +68,6 @@ ul {
 }
 
 /* message input and button  */
-
 form {
   width: 100%;
   display: flex;
@@ -110,3 +107,10 @@ form {
   border-radius: 5px;
   border: rgb(180, 180, 180) 1px solid;
 }
+
+@media only screen and (max-width: 500px) {
+  .container {
+    width: 85%;
+  }
+}
+

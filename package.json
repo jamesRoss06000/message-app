@@ -2,10 +2,12 @@
   "name": "message-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://jamesross06000.github.io/message-app/",
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase": "^7.3.0",
+    "gh-pages": "^2.1.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
@@ -14,6 +16,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "predeploy": "npm run build",
+		"deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
