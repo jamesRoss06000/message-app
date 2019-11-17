@@ -19,10 +19,9 @@ class LandingPage extends Component {
       names: [],
       font: "black",
     }
-
   }
 
-  // LOAD PREVIOUS NAME AND MESSAGES ON PAGE LOAD 
+  // LOAD PREVIOUS MESSAGES ON PAGE LOAD 
   componentDidMount() {
     const previousMessages = this.state.list;
 
@@ -142,24 +141,24 @@ class LandingPage extends Component {
       })
     })
   }
-
-  // RENDER THE HTML
+ 
+// RENDER THE HTML
   render() {
     return <div className='container'>
-      {/* title */}
-      <div className='titleDiv'>
-        <h1>React Message App</h1>
-        {/* <p className='usersLoggedIn'>Logged in: </p> */}
-        {
-          Object.keys(this.state.names).map(item => {
-            return (
-              <p className='usersLoggedIn' key={item}>
-                {(item === this.state.name ? ' ' : item + ' is logged in')}
-              </p>
-            )
-          })
-        }
-      </div>
+    {/* title */}
+    <div className='titleDiv'>
+      <h1>React Message App</h1>
+      {/* <p className='usersLoggedIn'>Logged in: </p> */}
+      {
+        Object.keys(this.state.names).map(item => {
+          return (
+            <p className='usersLoggedIn' key={item}>
+              {(item === this.state.name ? ' ' : item + ' is logged in')}
+            </p>
+          )
+        })
+      }
+    </div>
 
       {/* messages will be listed here */}
       < div className='messagesDiv' id='messagesDivId' >
