@@ -2,14 +2,14 @@ body {
   border: none;
   margin: none;
   background: black;
-  background-image: url(https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500);
-  background-size: cover;
-  background-repeat: no-repeat;
   opacity: 0.90;
 }
 
 .App {
   text-align: center;
+  background-image: url(https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500);
+  background-size: cover;
+  background-repeat: no-repeat;
   color: black;
   height: 100vh;
 }
