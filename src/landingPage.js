@@ -95,7 +95,10 @@ class LandingPage extends Component {
   submitHandler = e => {
     e.preventDefault()
     let name = this.state.name;
-    let text = this.state.message;
+    let preSmile = this.state.message.toString();
+    let preWink = preSmile.replace("(smile)", "😀");
+    let text = preWink.replace("(wink)", "😉");
+
     function saveMessage(name, text) {
       let newMessageRef = messageRef.push();
       newMessageRef.set({
